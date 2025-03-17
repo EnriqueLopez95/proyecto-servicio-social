@@ -2,64 +2,71 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Departamento;
+use App\Models\Coordinador;
 use Illuminate\Http\Request;
 
-class DepartamentoController extends Controller
+class CoordinadorController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Mostrar todos los coordinadores.
      */
     public function index()
     {
-        //
+        return response()->json(Coordinador::with(['coordinacion', 'usuario'])->get(), 200);
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Guardar un nuevo coordinador.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre_coordinador' => 'required|string|max:100',
+            'apellido_coordinador' => 'required|string|max:100',
+            'correo_coordinador' => 'required|string|email|max:100|unique:coordinadores,correo_coordinador',
+            'telefono_coordinador' => 'required|string|max:15',
+            'coordinacion_id' => 'required|exists:coordinaciones,id',
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $coordinador = Coordinador::create($request->all());
+
+        return response()->json($coordinador, 201);
     }
 
     /**
-     * Display the specified resource.
+     * Mostrar un coordinador específico.
      */
-    public function show(Departamento $departamento)
+    public function show(Coordinador $coordinador)
     {
-        //
+        return response()->json($coordinador->load(['coordinacion', 'usuario']), 200);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Actualizar un coordinador.
      */
-    public function edit(Departamento $departamento)
+    public function update(Request $request, Coordinador $coordinador)
     {
-        //
+        $request->validate([
+            'nombre_coordinador' => 'sometimes|required|string|max:100',
+            'apellido_coordinador' => 'sometimes|required|string|max:100',
+            'correo_coordinador' => 'sometimes|required|string|email|max:100|unique:coordinadores,correo_coordinador,' . $coordinador->id,
+            'telefono_coordinador' => 'sometimes|required|string|max:15',
+            'coordinacion_id' => 'sometimes|required|exists:coordinaciones,id',
+            'user_id' => 'sometimes|required|exists:users,id',
+        ]);
+
+        $coordinador->update($request->all());
+
+        return response()->json($coordinador, 200);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Eliminar un coordinador.
      */
-    public function update(Request $request, Departamento $departamento)
+    public function destroy(Coordinador $coordinador)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Departamento $departamento)
-    {
-        //
+        $coordinador->delete();
+        return response()->json(['message' => 'Coordinador eliminado correctamente'], 200);
     }
 }

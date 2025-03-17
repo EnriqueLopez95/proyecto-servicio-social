@@ -5,61 +5,68 @@ namespace App\Http\Controllers;
 use App\Models\Institucion;
 use Illuminate\Http\Request;
 
-class InstitucioneController extends Controller
+class InstitucionController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Mostrar listado de instituciones.
      */
     public function index()
     {
-        //
+        $instituciones = Institucion::with('direccion')->get();
+        return response()->json($instituciones);
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Almacenar una nueva institución.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre_institucion' => 'required|string|max:255',
+            'telefono_institucion' => 'required|string|max:20',
+            'correo_institucion' => 'required|string|email|max:50|unique:instituciones',
+            'tipo_institucion' => 'required|string|max:50',
+            'direccion_id' => 'required|exists:direcciones,id',
+        ]);
+
+        $institucion = Institucion::create($request->all());
+
+        return response()->json(['message' => 'Institución creada con éxito', 'institucion' => $institucion], 201);
     }
 
     /**
-     * Display the specified resource.
+     * Mostrar una institución específica.
      */
     public function show(Institucion $institucion)
     {
-        //
+        return response()->json($institucion->load('direccion'));
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Institucion $institucion)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Actualizar una institución.
      */
     public function update(Request $request, Institucion $institucion)
     {
-        //
+        $request->validate([
+            'nombre_institucion' => 'sometimes|string|max:255',
+            'telefono_institucion' => 'sometimes|string|max:20',
+            'correo_institucion' => 'sometimes|string|email|max:50|unique:instituciones,correo_institucion,' . $institucion->id,
+            'tipo_institucion' => 'sometimes|string|max:50',
+            'direccion_id' => 'sometimes|exists:direcciones,id',
+        ]);
+
+        $institucion->update($request->all());
+
+        return response()->json(['message' => 'Institución actualizada con éxito', 'institucion' => $institucion]);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Eliminar una institución.
      */
     public function destroy(Institucion $institucion)
     {
-        //
+        $institucion->delete();
+
+        return response()->json(['message' => 'Institución eliminada con éxito']);
     }
 }

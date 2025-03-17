@@ -2,64 +2,69 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Direcciones;
+use App\Models\Departamento;
 use Illuminate\Http\Request;
 
-class DireccionesController extends Controller
+class DepartamentoController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Mostrar todos los departamentos.
      */
     public function index()
     {
-        //
+        $departamentos = Departamento::all();
+        return response()->json($departamentos);
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Almacenar un nuevo departamento.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre_departamento' => 'required|string|max:50|unique:departamentos,nombre_departamento',
+        ]);
+
+        $departamento = Departamento::create($request->all());
+
+        return response()->json([
+            'message' => 'Departamento creado exitosamente.',
+            'departamento' => $departamento
+        ], 201);
     }
 
     /**
-     * Display the specified resource.
+     * Mostrar un departamento específico.
      */
-    public function show(Direcciones $direcciones)
+    public function show(Departamento $departamento)
     {
-        //
+        return response()->json($departamento);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Actualizar un departamento existente.
      */
-    public function edit(Direcciones $direcciones)
+    public function update(Request $request, Departamento $departamento)
     {
-        //
+        $request->validate([
+            'nombre_departamento' => 'required|string|max:50|unique:departamentos,nombre_departamento,' . $departamento->id,
+        ]);
+
+        $departamento->update($request->all());
+
+        return response()->json([
+            'message' => 'Departamento actualizado exitosamente.',
+            'departamento' => $departamento
+        ]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Eliminar un departamento.
      */
-    public function update(Request $request, Direcciones $direcciones)
+    public function destroy(Departamento $departamento)
     {
-        //
-    }
+        $departamento->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Direcciones $direcciones)
-    {
-        //
+        return response()->json(['message' => 'Departamento eliminado correctamente.']);
     }
 }

@@ -8,58 +8,55 @@ use Illuminate\Http\Request;
 class CoordinacionController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Mostrar todas las coordinaciones.
      */
     public function index()
     {
-        //
+        return response()->json(Coordinacion::all(), 200);
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Guardar una nueva coordinación.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre_coordinacion' => 'required|string|max:100',
+        ]);
+
+        $coordinacion = Coordinacion::create($request->all());
+
+        return response()->json($coordinacion, 201);
     }
 
     /**
-     * Display the specified resource.
+     * Mostrar una coordinación específica.
      */
     public function show(Coordinacion $coordinacion)
     {
-        //
+        return response()->json($coordinacion, 200);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Coordinacion $coordinacion)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Actualizar una coordinación.
      */
     public function update(Request $request, Coordinacion $coordinacion)
     {
-        //
+        $request->validate([
+            'nombre_coordinacion' => 'sometimes|required|string|max:100',
+        ]);
+
+        $coordinacion->update($request->all());
+
+        return response()->json($coordinacion, 200);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Eliminar una coordinación.
      */
     public function destroy(Coordinacion $coordinacion)
     {
-        //
+        $coordinacion->delete();
+        return response()->json(['message' => 'Coordinación eliminada correctamente'], 200);
     }
 }
