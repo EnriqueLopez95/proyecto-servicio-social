@@ -8,58 +8,67 @@ use Illuminate\Http\Request;
 class EstudianteController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Mostrar todos los estudiantes.
      */
     public function index()
     {
-        //
+        return response()->json(Estudiante::with(['carrera', 'proyecto'])->get(), 200);
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Guardar un nuevo estudiante.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre_estudiante' => 'required|string|max:100',
+            'apellido_estudiante' => 'required|string|max:100',
+            'carnet' => 'required|string|max:20|unique:estudiantes,carnet',
+            'correo_estudiante' => 'required|string|email|max:100|unique:estudiantes,correo_estudiante',
+            'telefono_estudiante' => 'required|string|max:15',
+            'carrera_id' => 'required|exists:carreras,id',
+            'proyectos_id' => 'required|exists:proyectos,id',
+        ]);
+
+        $estudiante = Estudiante::create($request->all());
+
+        return response()->json($estudiante, 201);
     }
 
     /**
-     * Display the specified resource.
+     * Mostrar un estudiante específico.
      */
     public function show(Estudiante $estudiante)
     {
-        //
+        return response()->json($estudiante->load(['carrera', 'proyecto']), 200);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Estudiante $estudiante)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Actualizar un estudiante.
      */
     public function update(Request $request, Estudiante $estudiante)
     {
-        //
+        $request->validate([
+            'nombre_estudiante' => 'sometimes|required|string|max:100',
+            'apellido_estudiante' => 'sometimes|required|string|max:100',
+            'carnet' => 'sometimes|required|string|max:20|unique:estudiantes,carnet,' . $estudiante->id,
+            'correo_estudiante' => 'sometimes|required|string|email|max:100|unique:estudiantes,correo_estudiante,' . $estudiante->id,
+            'telefono_estudiante' => 'sometimes|required|string|max:15',
+            'carrera_id' => 'sometimes|required|exists:carreras,id',
+            'proyectos_id' => 'sometimes|required|exists:proyectos,id',
+        ]);
+
+        $estudiante->update($request->all());
+
+        return response()->json($estudiante, 200);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Eliminar un estudiante.
      */
     public function destroy(Estudiante $estudiante)
     {
-        //
+        $estudiante->delete();
+        return response()->json(['message' => 'Estudiante eliminado correctamente'], 200);
     }
 }

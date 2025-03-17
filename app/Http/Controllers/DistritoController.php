@@ -8,58 +8,67 @@ use Illuminate\Http\Request;
 class DistritoController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Muestra la lista de distritos.
      */
     public function index()
     {
-        //
+        $distritos = Distrito::with('municipio')->get();
+        return response()->json($distritos);
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Guarda un nuevo distrito.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre_distrito' => 'required|string|max:50',
+            'municipio_id' => 'required|exists:municipios,id',
+        ]);
+
+        $distrito = Distrito::create($request->all());
+
+        return response()->json([
+            'message' => 'Distrito creado con éxito',
+            'distrito' => $distrito
+        ], 201);
     }
 
     /**
-     * Display the specified resource.
+     * Muestra un distrito específico.
      */
     public function show(Distrito $distrito)
     {
-        //
+        return response()->json($distrito->load('municipio'));
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Distrito $distrito)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Actualiza un distrito.
      */
     public function update(Request $request, Distrito $distrito)
     {
-        //
+        $request->validate([
+            'nombre_distrito' => 'sometimes|required|string|max:50',
+            'municipio_id' => 'sometimes|required|exists:municipios,id',
+        ]);
+
+        $distrito->update($request->all());
+
+        return response()->json([
+            'message' => 'Distrito actualizado con éxito',
+            'distrito' => $distrito
+        ]);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Elimina un distrito.
      */
     public function destroy(Distrito $distrito)
     {
-        //
+        $distrito->delete();
+
+        return response()->json([
+            'message' => 'Distrito eliminado correctamente'
+        ]);
     }
 }
