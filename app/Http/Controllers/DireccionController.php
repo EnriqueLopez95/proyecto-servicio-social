@@ -2,69 +2,75 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Departamento;
+use App\Models\Direccion;
 use Illuminate\Http\Request;
 
-class DepartamentoController extends Controller
+class DireccionController extends Controller
 {
     /**
-     * Mostrar todos los departamentos.
+     * Muestra la lista de direcciones.
      */
     public function index()
     {
-        $departamentos = Departamento::all();
-        return response()->json($departamentos);
+        $direcciones = Direccion::with('distrito')->get();
+        return response()->json($direcciones);
     }
 
     /**
-     * Almacenar un nuevo departamento.
+     * Guarda una nueva dirección.
      */
     public function store(Request $request)
     {
         $request->validate([
-            'nombre_departamento' => 'required|string|max:50|unique:departamentos,nombre_departamento',
+            'nombre_calle' => 'required|string|max:100',
+            'numero_calle' => 'required|string|max:20',
+            'distrito_id' => 'required|exists:distritos,id',
         ]);
 
-        $departamento = Departamento::create($request->all());
+        $direccion = Direccion::create($request->all());
 
         return response()->json([
-            'message' => 'Departamento creado exitosamente.',
-            'departamento' => $departamento
+            'message' => 'Dirección creada con éxito',
+            'direccion' => $direccion
         ], 201);
     }
 
     /**
-     * Mostrar un departamento específico.
+     * Muestra una dirección específica.
      */
-    public function show(Departamento $departamento)
+    public function show(Direccion $direccion)
     {
-        return response()->json($departamento);
+        return response()->json($direccion->load('distrito'));
     }
 
     /**
-     * Actualizar un departamento existente.
+     * Actualiza una dirección.
      */
-    public function update(Request $request, Departamento $departamento)
+    public function update(Request $request, Direccion $direccion)
     {
         $request->validate([
-            'nombre_departamento' => 'required|string|max:50|unique:departamentos,nombre_departamento,' . $departamento->id,
+            'nombre_calle' => 'sometimes|required|string|max:100',
+            'numero_calle' => 'sometimes|required|string|max:20',
+            'distrito_id' => 'sometimes|required|exists:distritos,id',
         ]);
 
-        $departamento->update($request->all());
+        $direccion->update($request->all());
 
         return response()->json([
-            'message' => 'Departamento actualizado exitosamente.',
-            'departamento' => $departamento
+            'message' => 'Dirección actualizada con éxito',
+            'direccion' => $direccion
         ]);
     }
 
     /**
-     * Eliminar un departamento.
+     * Elimina una dirección.
      */
-    public function destroy(Departamento $departamento)
+    public function destroy(Direccion $direccion)
     {
-        $departamento->delete();
+        $direccion->delete();
 
-        return response()->json(['message' => 'Departamento eliminado correctamente.']);
+        return response()->json([
+            'message' => 'Dirección eliminada correctamente'
+        ]);
     }
 }

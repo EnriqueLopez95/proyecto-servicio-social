@@ -2,71 +2,73 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Institucion;
+use App\Models\Municipio;
 use Illuminate\Http\Request;
 
-class InstitucionController extends Controller
+class MunicipioController extends Controller
 {
-    /**
-     * Mostrar listado de instituciones.
-     */
+    
+    //Muestra la lista de municipios.
+     
     public function index()
     {
-        $instituciones = Institucion::with('direccion')->get();
-        return response()->json($instituciones);
+        $municipios = Municipio::with('departamento')->get();
+        return response()->json($municipios);
     }
 
     /**
-     * Almacenar una nueva institución.
+     * Guarda un nuevo municipio.
      */
     public function store(Request $request)
     {
         $request->validate([
-            'nombre_institucion' => 'required|string|max:255',
-            'telefono_institucion' => 'required|string|max:20',
-            'correo_institucion' => 'required|string|email|max:50|unique:instituciones',
-            'tipo_institucion' => 'required|string|max:50',
-            'direccion_id' => 'required|exists:direcciones,id',
+            'nombre_municipio' => 'required|string|max:50',
+            'departamento_id' => 'required|exists:departamentos,id',
         ]);
 
-        $institucion = Institucion::create($request->all());
+        $municipio = Municipio::create($request->all());
 
-        return response()->json(['message' => 'Institución creada con éxito', 'institucion' => $institucion], 201);
+        return response()->json([
+            'message' => 'Municipio creado con éxito',
+            'municipio' => $municipio
+        ], 201);
     }
 
     /**
-     * Mostrar una institución específica.
+     * Muestra un municipio específico.
      */
-    public function show(Institucion $institucion)
+    public function show(Municipio $municipio)
     {
-        return response()->json($institucion->load('direccion'));
+        return response()->json($municipio->load('departamento'));
     }
 
     /**
-     * Actualizar una institución.
+     * Actualiza un municipio.
      */
-    public function update(Request $request, Institucion $institucion)
+    public function update(Request $request, Municipio $municipio)
     {
         $request->validate([
-            'nombre_institucion' => 'sometimes|string|max:255',
-            'telefono_institucion' => 'sometimes|string|max:20',
-            'correo_institucion' => 'sometimes|string|email|max:50|unique:instituciones,correo_institucion,' . $institucion->id,
-            'tipo_institucion' => 'sometimes|string|max:50',
-            'direccion_id' => 'sometimes|exists:direcciones,id',
+            'nombre_municipio' => 'sometimes|required|string|max:50',
+            'departamento_id' => 'sometimes|required|exists:departamentos,id',
         ]);
 
-        $institucion->update($request->all());
+        $municipio->update($request->all());
 
-        return response()->json(['message' => 'Institución actualizada con éxito', 'institucion' => $institucion]);
+        return response()->json([
+            'message' => 'Municipio actualizado con éxito',
+            'municipio' => $municipio
+        ]);
     }
 
     /**
-     * Eliminar una institución.
+     * Elimina un municipio.
      */
-    public function destroy(Institucion $institucion)
+    public function destroy(Municipio $municipio)
     {
-        $institucion->delete();
+        $municipio->delete();
 
-        return response()->json(['message' => 'Institución eliminada con éxito']);
+        return response()->json([
+            'message' => 'Municipio eliminado correctamente'
+        ]);
     }
 }
