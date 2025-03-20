@@ -2,71 +2,69 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Coordinador;
+use App\Models\Departamento;
 use Illuminate\Http\Request;
 
-class CoordinadorController extends Controller
+class DepartamentoController extends Controller
 {
     /**
-     * Mostrar todos los coordinadores.
+     * Mostrar todos los departamentos.
      */
     public function index()
     {
-        return response()->json(Coordinador::with(['coordinacion', 'usuario'])->get(), 200);
+        $departamentos = Departamento::all();
+        return response()->json($departamentos);
     }
 
     /**
-     * Guardar un nuevo coordinador.
+     * Almacenar un nuevo departamento.
      */
     public function store(Request $request)
     {
         $request->validate([
-            'nombre_coordinador' => 'required|string|max:100',
-            'apellido_coordinador' => 'required|string|max:100',
-            'correo_coordinador' => 'required|string|email|max:100|unique:coordinadores,correo_coordinador',
-            'telefono_coordinador' => 'required|string|max:15',
-            'coordinacion_id' => 'required|exists:coordinaciones,id',
-            'user_id' => 'required|exists:users,id',
+            'nombre_departamento' => 'required|string|max:50|unique:departamentos,nombre_departamento',
         ]);
 
-        $coordinador = Coordinador::create($request->all());
+        $departamento = Departamento::create($request->all());
 
-        return response()->json($coordinador, 201);
+        return response()->json([
+            'message' => 'Departamento creado exitosamente.',
+            'departamento' => $departamento
+        ], 201);
     }
 
     /**
-     * Mostrar un coordinador específico.
+     * Mostrar un departamento específico.
      */
-    public function show(Coordinador $coordinador)
+    public function show(Departamento $departamento)
     {
-        return response()->json($coordinador->load(['coordinacion', 'usuario']), 200);
+        return response()->json($departamento);
     }
 
     /**
-     * Actualizar un coordinador.
+     * Actualizar un departamento existente.
      */
-    public function update(Request $request, Coordinador $coordinador)
+    public function update(Request $request, Departamento $departamento)
     {
         $request->validate([
-            'nombre_coordinador' => 'sometimes|required|string|max:100',
-            'apellido_coordinador' => 'sometimes|required|string|max:100',
-            'correo_coordinador' => 'sometimes|required|string|email|max:100|unique:coordinadores,correo_coordinador,' . $coordinador->id,
-            'telefono_coordinador' => 'sometimes|required|string|max:15',
-            'coordinacion_id' => 'sometimes|required|exists:coordinaciones,id',
-            'user_id' => 'sometimes|required|exists:users,id',
+            'nombre_departamento' => 'required|string|max:50|unique:departamentos,nombre_departamento,' . $departamento->id,
         ]);
 
-        $coordinador->update($request->all());
+        $departamento->update($request->all());
 
-        return response()->json($coordinador, 200);
+        return response()->json([
+            'message' => 'Departamento actualizado exitosamente.',
+            'departamento' => $departamento
+        ]);
     }
 
     /**
-     * Eliminar un coordinador.
+     * Eliminar un departamento.
      */
-    public function destroy(Coordinador $coordinador)
+    public function destroy(Departamento $departamento)
     {
-        $coordinador->delete();
-        return response()->json(['message' => 'Coordinador eliminado correctamente'], 200);
+        $departamento->delete();
+
+        return response()->json(['message' => 'Departamento eliminado correctamente.']);
     }
 }
