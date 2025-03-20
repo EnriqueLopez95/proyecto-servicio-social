@@ -18,6 +18,7 @@ class CarreraSeeder extends Seeder
             ['nombre_carrera' => 'Licenciatura en Administración de Empresas', 'coordinacion_id' => 3],
             ['nombre_carrera' => 'Licenciatura en Ciencias Jurídicas', 'coordinacion_id' => 1],
             ['nombre_carrera' => 'Licenciatura en Contaduría Pública', 'coordinacion_id' => 3],
+            ['nombre_carrera' => 'Licenciatura en Ciencias de la Computación', 'coordinacion_id' => 4],
             ['nombre_carrera' => 'Técnico en Desarrollo de Aplicaciones Informáticas', 'coordinacion_id' => 4],
             ['nombre_carrera' => 'Técnico en Ingeniería Agroecológica', 'coordinacion_id' => 5],
             ['nombre_carrera' => 'Licenciatura en Idioma Inglés', 'coordinacion_id' => 6],
