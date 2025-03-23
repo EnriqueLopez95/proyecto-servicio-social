@@ -17,6 +17,10 @@ return new class extends Migration
             $table->string('nombre_proyecto', 50);
             $table->text('descripcion');
 
+            $table->ForeignId('coordinador_id')
+                ->constrained('coordinadores')
+                ->onDelete('cascade');
+
             $table->foreignId('institucion_id')
                 ->constrained('instituciones')
                 ->onDelete('cascade');

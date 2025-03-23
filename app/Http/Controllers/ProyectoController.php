@@ -23,6 +23,7 @@ class ProyectoController extends Controller
         $request->validate([
             'nombre_proyecto' => 'required|string|max:50',
             'descripcion' => 'required|string',
+            'coordinador_id' => 'required|exists:coordinadores,id',
             'institucion_id' => 'required|exists:instituciones,id',
             'fecha_inicio' => 'required|date',
             'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
@@ -49,6 +50,7 @@ class ProyectoController extends Controller
         $request->validate([
             'nombre_proyecto' => 'sometimes|required|string|max:50',
             'descripcion' => 'sometimes|required|string',
+            'coordinador_id' => 'sometimes|required|exists:coordinadores,id',
             'institucion_id' => 'sometimes|required|exists:instituciones,id',
             'fecha_inicio' => 'sometimes|required|date',
             'fecha_fin' => 'sometimes|required|date|after_or_equal:fecha_inicio',
