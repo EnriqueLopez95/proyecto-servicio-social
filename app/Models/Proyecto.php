@@ -12,14 +12,21 @@ class Proyecto extends Model
     protected $fillable = [
         'nombre_proyecto',
         'descripcion',
+        'coordinador_id',
         'institucion_id',
         'fecha_inicio',
         'fecha_fin'
     ];
 
     
-    //Relación con Institución
+    //Relación con Coordinador
+    public function coordinador()
+    {
+        return $this->belongsTo(Coordinador::class);
+    }
 
+    //Relación con Estudiantes
+    //Relación con Institución
     public function institucion()
     {
         return $this->belongsTo(Institucion::class);
