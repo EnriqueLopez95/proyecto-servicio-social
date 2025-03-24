@@ -7,16 +7,16 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\DepartamentoController;
-use App\Http\Controllers\MunicipioController;
-use App\Http\Controllers\DistritoController;
-use App\Http\Controllers\DireccionController;
-use App\Http\Controllers\InstitucionController;
-use App\Http\Controllers\CoordinacionController;
-use App\Http\Controllers\CoordinadorController;
-use App\Http\Controllers\CarreraController;
-use App\Http\Controllers\ProyectoController;
-use App\Http\Controllers\EstudianteController;
+use App\Http\Controllers\Api\DepartamentoController;
+use App\Http\Controllers\Api\MunicipioController;
+use App\Http\Controllers\Api\DistritoController;
+use App\Http\Controllers\Api\DireccionController;
+use App\Http\Controllers\Api\InstitucionController;
+use App\Http\Controllers\Api\CoordinacionController;
+use App\Http\Controllers\Api\CoordinadorController;
+use App\Http\Controllers\Api\CarreraController;
+use App\Http\Controllers\Api\ProyectoController;
+use App\Http\Controllers\Api\EstudianteController;
 
 
 
