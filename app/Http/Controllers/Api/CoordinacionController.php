@@ -16,6 +16,7 @@ class CoordinacionController extends Controller
         return response()->json(Coordinacion::all(), 200);
     }
 
+
     /**
      * Guardar una nueva coordinación.
      */

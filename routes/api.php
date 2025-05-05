@@ -26,7 +26,7 @@ use App\Http\Controllers\Api\EstudianteController;
 
 Route::prefix('auth')->group(function (){
     Route::post('login', [AuthController::class,'login']);
-    
+
     Route::post('refresh-token', [AuthController::class,'refresh']);
     Route::post('register',[AuthController::class,'register']);
 });
@@ -35,7 +35,7 @@ Route::middleware('auth:api')->prefix('users')->group(function (){
     Route::get('/role',[CreatePermissionRolController::class, 'getRole'])->middleware('rol:Super Admin');
     Route::post('/permissions',[CreatePermissionRolController::class,'createPermissionsAction'])->middleware('rol:Super Admin,Admin');
     Route::post('/role',[CreatePermissionRolController::class,'store'])->middleware('rol:Super Admin');
-   
+
 });
 
 

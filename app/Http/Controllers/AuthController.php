@@ -9,6 +9,7 @@ use DB;
 use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB as FacadesDB;
 use Illuminate\Support\Facades\Validator;
 use Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -21,6 +22,7 @@ class AuthController extends Controller
     //
     public function login(Request $request)
     {
+        // return $request->all();
         $credential = $request->only('email', 'password');
 
         if (!$token = JWTAuth::attempt($credential)) {
@@ -29,12 +31,12 @@ class AuthController extends Controller
 
         $user = Auth::user();
 
-        $userInformation = MntPersonalInformationUserModel::where('user_id', $user->id)->first();
+        // $userInformation = MntPersonalInformationUserModel::where('user_id', $user->id)->first();
 
         $customClaims = [
             'user_id' => $user->id,
             'email' => $user->email,
-            'userInformation' => $userInformation ? $userInformation->toArray() : null, // Asegúrate de convertir a array
+            // 'userInformation' => $userInformation ? $userInformation->toArray() : null, // Asegúrate de convertir a array
             'role' => $user->getRoleNames() // Incluye roles si es necesario
         ];
 
@@ -95,7 +97,7 @@ class AuthController extends Controller
     {
         try {
 
-            DB::beginTransaction();
+            FacadesDB::beginTransaction();
             // Valida los datos
             $validator = Validator::make($request->all(), [
 
@@ -147,23 +149,23 @@ class AuthController extends Controller
     {
         try {
             $token = JWTAuth::getToken();
-        
+
             if (!$token) {
                 return response()->json([
                     'message' => 'No token provided',
                     'status' => 400
                 ], 400);
             }
-        
+
             // Registrar el logout del usuario (opcional)
             $user = JWTAuth::authenticate($token);
             $user->update(['is_logged_in' => false]); // Cambia 'is_logged_in' según tu modelo
-        
+
             return response()->json([
                 'message' => 'User logged out successfully',
                 'status' => 200
             ], 200);
-        
+
         } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
             return response()->json([
                 'message' => 'Error invalidating token: ' . $e->getMessage(),

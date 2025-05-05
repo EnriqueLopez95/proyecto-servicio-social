@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
 use App\Models\User;
-use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -42,7 +42,7 @@ class CreatePermissionRolController extends Controller
             $role = Role::create([
                 'name' => $request->role_name,
             ]);
-            
+
             // asigna permisos a rol creado
             $role->givePermissionTo($request->permissions);
             DB::commit(); //
@@ -64,14 +64,14 @@ class CreatePermissionRolController extends Controller
     }
     public function createPermissionsAction(Request $request)
     {
-        
+
         DB::beginTransaction();
         try {
             // Validate request data
 
             $message = [
                 'permissions.required' => 'Los permisos son obligatorios.',
-                
+
                 'permissions.*.string' => 'Los permisos deben ser cadenas.',
                 'permissions.*.max' => 'Los permisos deben tener un máximo de 255 caracteres.',
             ];
@@ -88,7 +88,7 @@ class CreatePermissionRolController extends Controller
             foreach($request->permissions as $permission){
                 Permission::create(['name' => $permission]);
             }
-           
+
             DB::commit();
             return ApiResponse::success('Permisos creado',200,$request);
         } catch (\Exception $e) {
@@ -119,7 +119,7 @@ class CreatePermissionRolController extends Controller
                 'email' =>'required|email|max:255',
                 'password' => 'required|string|min:8|confirmed',
                 //'role' =>'required|integer',
-               
+
             ],$message);
             if ($validator->fails()) {
                 return ApiResponse::error('Error de validación '.$validator->messages()->first(), 422);
@@ -127,7 +127,7 @@ class CreatePermissionRolController extends Controller
 
             $dataExplode = explode('@',$request->email);
             $userName = $dataExplode[0].'_'. Str::uuid();
-    
+
             // crea usuario
             $user = User::create([
                 'name' => $userName,
@@ -142,7 +142,7 @@ class CreatePermissionRolController extends Controller
         } catch (\Exception $e) {
             //throw $th;
             return ApiResponse::error('Error al crear el usuario '.$e->getMessage(), 500);
-    
+
         }
     }
 }
