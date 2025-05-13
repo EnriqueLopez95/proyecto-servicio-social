@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Api\CreatePermissionRolController;
-use App\Http\Controllers\Api\CreatePrimissionRolController;
 
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
@@ -35,7 +34,11 @@ Route::middleware('auth:api')->prefix('users')->group(function (){
     Route::get('/role',[CreatePermissionRolController::class, 'getRole'])->middleware('rol:Super Admin');
     Route::post('/permissions',[CreatePermissionRolController::class,'createPermissionsAction'])->middleware('rol:Super Admin,Admin');
     Route::post('/role',[CreatePermissionRolController::class,'store'])->middleware('rol:Super Admin');
-
+    
+    Route::get('/',[CreatePermissionRolController::class,'showUsers'])->middleware('rol:Super Admin,Admin');
+    Route::get('/{id}',[CreatePermissionRolController::class,'ShowUser'])->middleware('rol:Super Admin,Admin');
+    Route::post('/create-user',[CreatePermissionRolController::class,'createUser'])->middleware('rol:Super Admin,Admin');
+    Route::put('/update-user/{user}',[CreatePermissionRolController::class,'updateUser'])->middleware('rol:Super Admin,Admin');
 });
 
 

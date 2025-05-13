@@ -16,7 +16,8 @@ class Estudiante extends Model
         'correo_estudiante',
         'telefono_estudiante',
         'carrera_id',
-        'proyectos_id'
+        'proyectos_id',
+        'user_id',
     ];
 
 
@@ -33,5 +34,12 @@ class Estudiante extends Model
     public function proyecto()
     {
         return $this->belongsTo(Proyecto::class, 'proyectos_id');
+    }
+
+    //Relación con usuario.
+    
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

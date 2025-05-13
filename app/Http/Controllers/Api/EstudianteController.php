@@ -13,7 +13,7 @@ class EstudianteController extends Controller
      */
     public function index()
     {
-        return response()->json(Estudiante::with(['carrera', 'proyecto'])->get(), 200);
+        return response()->json(Estudiante::with(['carrera', 'proyecto', 'usuario'])->get(), 200);
     }
 
     /**
@@ -29,6 +29,7 @@ class EstudianteController extends Controller
             'telefono_estudiante' => 'required|string|max:15',
             'carrera_id' => 'required|exists:carreras,id',
             'proyectos_id' => 'required|exists:proyectos,id',
+            'user_id' => 'required|exists:users,id',
         ]);
 
         $estudiante = Estudiante::create($request->all());
@@ -41,7 +42,7 @@ class EstudianteController extends Controller
      */
     public function show(Estudiante $estudiante)
     {
-        return response()->json($estudiante->load(['carrera', 'proyecto']), 200);
+        return response()->json($estudiante->load(['carrera', 'proyecto', 'usuario']), 200);
     }
 
     /**
@@ -57,6 +58,7 @@ class EstudianteController extends Controller
             'telefono_estudiante' => 'sometimes|required|string|max:15',
             'carrera_id' => 'sometimes|required|exists:carreras,id',
             'proyectos_id' => 'sometimes|required|exists:proyectos,id',
+            'user_id' => 'required|exists:users,id',
         ]);
 
         $estudiante->update($request->all());
