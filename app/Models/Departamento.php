@@ -9,7 +9,7 @@ class Departamento extends Model
 {
     use HasFactory;
 
-    protected $table = 'departamentos'; 
+    protected $table = 'departamentos';
 
     protected $fillable = [
         'nombre_departamento', 
@@ -21,4 +21,3 @@ class Departamento extends Model
         return $this->hasMany(Municipio::class, 'id_departamento');
     } 
 }
-

@@ -13,8 +13,7 @@ class DireccionController extends Controller
      */
     public function index()
     {
-        $direcciones = Direccion::with('distrito')->get();
-        return response()->json($direcciones);
+        return response()->json(Direccion::with('distrito.municipio.departamento')->get());
     }
 
     /**

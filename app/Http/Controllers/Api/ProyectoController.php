@@ -13,7 +13,7 @@ class ProyectoController extends Controller
      */
     public function index()
     {
-        return response()->json(Proyecto::with('institucion')->get(), 200);
+        return response()->json(Proyecto::with(['institucion', 'coordinador'])->get(), 200);
     }
 
     /**
@@ -22,8 +22,9 @@ class ProyectoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nombre_proyecto' => 'required|string|max:50',
+            'nombre_proyecto' => 'required|string|max:200',
             'descripcion' => 'required|string',
+            'estado' => 'required|in:En proceso,Finalizado',
             'coordinador_id' => 'required|exists:coordinadores,id',
             'institucion_id' => 'required|exists:instituciones,id',
             'fecha_inicio' => 'required|date',
@@ -40,7 +41,7 @@ class ProyectoController extends Controller
      */
     public function show(Proyecto $proyecto)
     {
-        return response()->json($proyecto->load('institucion'), 200);
+        return response()->json($proyecto->load(['institucion', 'coordinador']), 200);
     }
 
     /**
@@ -49,8 +50,9 @@ class ProyectoController extends Controller
     public function update(Request $request, Proyecto $proyecto)
     {
         $request->validate([
-            'nombre_proyecto' => 'sometimes|required|string|max:50',
+            'nombre_proyecto' => 'sometimes|required|string|max:200',
             'descripcion' => 'sometimes|required|string',
+            'estado' => 'sometimes|required|in:En proceso,Finalizado',
             'coordinador_id' => 'sometimes|required|exists:coordinadores,id',
             'institucion_id' => 'sometimes|required|exists:instituciones,id',
             'fecha_inicio' => 'sometimes|required|date',

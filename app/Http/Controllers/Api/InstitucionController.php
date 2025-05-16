@@ -13,8 +13,7 @@ class InstitucionController extends Controller
      */
     public function index()
     {
-        $instituciones = Institucion::with('direccion')->get();
-        return response()->json($instituciones);
+        return response()->json(Institucion::with('direccion.distrito.municipio.departamento')->get());
     }
 
     /**

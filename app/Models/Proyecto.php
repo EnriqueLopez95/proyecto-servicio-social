@@ -12,6 +12,7 @@ class Proyecto extends Model
     protected $fillable = [
         'nombre_proyecto',
         'descripcion',
+        'estado',
         'coordinador_id',
         'institucion_id',
         'fecha_inicio',

@@ -22,6 +22,8 @@ class Institucion extends Model
     // Relación con Direccion (Una institución tiene una dirección)
     public function direccion()
     {
-        return $this->belongsTo(Direccion::class);
+        return $this->belongsTo(Direccion::class, 'direccion_id');
     }
+
+    
 }
