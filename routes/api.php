@@ -31,14 +31,14 @@ Route::prefix('auth')->group(function (){
 });
 
 Route::middleware('auth:api')->prefix('users')->group(function (){
-    Route::get('/role',[CreatePermissionRolController::class, 'getRole'])->middleware('rol:Super Admin');
+    Route::get('/role',[CreatePermissionRolController::class, 'getRole'])->middleware('rol:Super Admin,Admin');
     Route::post('/permissions',[CreatePermissionRolController::class,'createPermissionsAction'])->middleware('rol:Super Admin,Admin');
     Route::post('/role',[CreatePermissionRolController::class,'store'])->middleware('rol:Super Admin');
     
-    Route::get('/',[CreatePermissionRolController::class,'showUsers'])->middleware('rol:Super Admin,Admin');
-    Route::get('/{id}',[CreatePermissionRolController::class,'ShowUser'])->middleware('rol:Super Admin,Admin');
-    Route::post('/create-user',[CreatePermissionRolController::class,'createUser'])->middleware('rol:Super Admin,Admin');
-    Route::put('/update-user/{user}',[CreatePermissionRolController::class,'updateUser'])->middleware('rol:Super Admin,Admin');
+    Route::get('/',[CreatePermissionRolController::class,'showUsers'])->middleware('rol:Super Admin,Admin,User');
+    Route::get('/{id}',[CreatePermissionRolController::class,'ShowUser'])->middleware('rol:Super Admin,Admin,User');
+    Route::post('/create-user',[CreatePermissionRolController::class,'createUser'])->middleware('rol:Super Admin');
+    Route::put('/update-user/{user}',[CreatePermissionRolController::class,'updateUser'])->middleware('rol:Super Admin');
 });
 
 
@@ -53,92 +53,92 @@ Route::middleware('auth:api')->prefix('users')->group(function () {
     Route::post('logout', [AuthController::class,'logout']);
 });
 
-//Departamentos
-Route::prefix('departamentos')->group(function(){
-    Route::get('/', [DepartamentoController::class, 'index']);
-    Route::get('/{departamento}', [DepartamentoController::class, 'show']);
-    Route::post('/', [DepartamentoController::class, 'store']);
-    Route::put('/{departamento}', [DepartamentoController::class, 'update']);
-    Route::delete('/{departamento}', [DepartamentoController::class, 'destroy']);
+// Departamentos
+Route::middleware('auth:api')->prefix('departamentos')->group(function(){
+    Route::get('/', [DepartamentoController::class, 'index'])->middleware('rol:Super Admin,Admin,User');
+    Route::get('/{departamento}', [DepartamentoController::class, 'show'])->middleware('rol:Super Admin,Admin,User');
+    Route::post('/', [DepartamentoController::class, 'store'])->middleware('rol:Super Admin');
+    Route::put('/{departamento}', [DepartamentoController::class, 'update'])->middleware('rol:Super Admin');
+    Route::delete('/{departamento}', [DepartamentoController::class, 'destroy'])->middleware('rol:Super Admin');
 });
 
-//Municipios
-Route::prefix('municipios')->group(function(){
-    Route::get('/', [MunicipioController::class, 'index']);
-    Route::get('/{municipio}', [MunicipioController::class, 'show']);
-    Route::post('/', [MunicipioController::class, 'store']);
-    Route::put('/{municipio}', [MunicipioController::class, 'update']);
-    Route::delete('/{municipio}', [MunicipioController::class, 'destroy']);
+// Municipios
+Route::middleware('auth:api')->prefix('municipios')->group(function(){
+    Route::get('/', [MunicipioController::class, 'index'])->middleware('rol:Super Admin,Admin,User');
+    Route::get('/{municipio}', [MunicipioController::class, 'show'])->middleware('rol:Super Admin,Admin,User');
+    Route::post('/', [MunicipioController::class, 'store'])->middleware('rol:Super Admin');
+    Route::put('/{municipio}', [MunicipioController::class, 'update'])->middleware('rol:Super Admin');
+    Route::delete('/{municipio}', [MunicipioController::class, 'destroy'])->middleware('rol:Super Admin');
 });
 
-//Distritos
-Route::prefix('distritos', DistritoController::class)->group(function(){
-    Route::get('/', [DistritoController::class, 'index']);
-    Route::get('/{distrito}', [DistritoController::class, 'show']);
-    Route::post('/', [DistritoController::class, 'store']);
-    Route::put('/{distrito}', [DistritoController::class, 'update']);
-    Route::delete('/{distrito}', [DistritoController::class, 'destroy']);
+// Distritos
+Route::middleware('auth:api')->prefix('distritos')->group(function(){
+    Route::get('/', [DistritoController::class, 'index'])->middleware('rol:Super Admin,Admin,User');
+    Route::get('/{distrito}', [DistritoController::class, 'show'])->middleware('rol:Super Admin,Admin,User');
+    Route::post('/', [DistritoController::class, 'store'])->middleware('rol:Super Admin');
+    Route::put('/{distrito}', [DistritoController::class, 'update'])->middleware('rol:Super Admin');
+    Route::delete('/{distrito}', [DistritoController::class, 'destroy'])->middleware('rol:Super Admin');
 });
 
-//Coordinaciones
-Route::prefix('coordinaciones')->group(function(){
-    Route::get('/', [CoordinacionController::class, 'index']);
-    Route::get('/{coordinacion}', [CoordinacionController::class, 'show']);
-    Route::post('/', [CoordinacionController::class, 'store']);
-    Route::put('/{coordinacion}', [CoordinacionController::class, 'update']);
-    Route::delete('/{coordinacion}', [CoordinacionController::class, 'destroy']);
+// Coordinaciones
+Route::middleware('auth:api')->prefix('coordinaciones')->group(function(){
+    Route::get('/', [CoordinacionController::class, 'index'])->middleware('rol:Super Admin,Admin,User');
+    Route::get('/{coordinacion}', [CoordinacionController::class, 'show'])->middleware('rol:Super Admin,Admin,User');
+    Route::post('/', [CoordinacionController::class, 'store'])->middleware('rol:Super Admin,Admin');
+    Route::put('/{coordinacion}', [CoordinacionController::class, 'update'])->middleware('rol:Super Admin,Admin');
+    Route::delete('/{coordinacion}', [CoordinacionController::class, 'destroy'])->middleware('rol:Super Admin,Admin');
 });
 
-//Carreras
-Route::prefix('carreras')->group(function(){
-    Route::get('/', [CarreraController::class, 'index']);
-    Route::get('/{carrera}', [CarreraController::class, 'show']);
-    Route::post('/', [CarreraController::class, 'store']);
-    Route::put('/{carrera}', [CarreraController::class, 'update']);
-    Route::delete('/{carrera}', [CarreraController::class, 'destroy']);
+// Carreras
+Route::middleware('auth:api')->prefix('carreras')->group(function(){
+    Route::get('/', [CarreraController::class, 'index'])->middleware('rol:Super Admin,Admin,User');
+    Route::get('/{carrera}', [CarreraController::class, 'show'])->middleware('rol:Super Admin,Admin,User');
+    Route::post('/', [CarreraController::class, 'store'])->middleware('rol:Super Admin, Admin');
+    Route::put('/{carrera}', [CarreraController::class, 'update'])->middleware('rol:Super Admin,Admin');
+    Route::delete('/{carrera}', [CarreraController::class, 'destroy'])->middleware('rol:Super Admin,Admin');
 });
 
-//Direcciones
-Route::prefix('direcciones')->group(function(){
-    Route::get('/', [DireccionController::class, 'index']);
-    Route::get('/{direccion}', [DireccionController::class, 'show']);
-    Route::post('/', [DireccionController::class, 'store']);
-    Route::put('/{direccion}', [DireccionController::class, 'update']);
-    Route::delete('/{direccion}', [DireccionController::class, 'destroy']);
+// Direcciones
+Route::middleware('auth:api')->prefix('direcciones')->group(function(){
+    Route::get('/', [DireccionController::class, 'index'])->middleware('rol:Super Admin,Admin,User');
+    Route::get('/{direccion}', [DireccionController::class, 'show'])->middleware('rol:Super Admin,Admin,User');
+    Route::post('/', [DireccionController::class, 'store'])->middleware('rol:Super Admin');
+    Route::put('/{direccion}', [DireccionController::class, 'update'])->middleware('rol:Super Admin,Admin');
+    Route::delete('/{direccion}', [DireccionController::class, 'destroy'])->middleware('rol:Super Admin,Admin');
 });
 
-//Instituciones
-Route::prefix('instituciones')->group(function(){
-    Route::get('/', [InstitucionController::class, 'index']);
-    Route::get('/{institucion}', [InstitucionController::class, 'show']);
-    Route::post('/', [InstitucionController::class, 'store']);
-    Route::put('/{institucion}', [InstitucionController::class, 'update']);
-    Route::delete('/{institucion}', [InstitucionController::class, 'destroy']);
+// Instituciones
+Route::middleware('auth:api')->prefix('instituciones')->group(function(){
+    Route::get('/', [InstitucionController::class, 'index'])->middleware('rol:Super Admin,Admin,User');
+    Route::get('/{institucion}', [InstitucionController::class, 'show'])->middleware('rol:Super Admin,Admin,User');
+    Route::post('/', [InstitucionController::class, 'store'])->middleware('rol:Super Admin');
+    Route::put('/{institucion}', [InstitucionController::class, 'update'])->middleware('rol:Super Admin,Admin');
+    Route::delete('/{institucion}', [InstitucionController::class, 'destroy'])->middleware('rol:Super Admin,Admin');
 });
 
-//Coordinadores
-Route::prefix('coordinadores')->group(function(){
-    Route::get('/', [CoordinadorController::class, 'index']);
-    Route::get('/{coordinador}', [CoordinadorController::class, 'show']);
-    Route::post('/', [CoordinadorController::class, 'store']);
-    Route::put('/{coordinador}', [CoordinadorController::class, 'update']);
-    Route::delete('/{coordinador}', [CoordinadorController::class, 'destroy']);
+// Coordinadores
+Route::middleware('auth:api')->prefix('coordinadores')->group(function () {
+    Route::get('/', [CoordinadorController::class, 'index'])->middleware('rol:Super Admin,Admin,User');
+    Route::get('/{coordinador}', [CoordinadorController::class, 'show'])->middleware('rol:Super Admin,Admin,User');
+    Route::post('/', [CoordinadorController::class, 'store'])->middleware('rol:Super Admin');
+    Route::put('/{coordinador}', [CoordinadorController::class, 'update'])->middleware('rol:Super Admin');
+    Route::delete('/{coordinador}', [CoordinadorController::class, 'destroy'])->middleware('rol:Super Admin');
 });
 
-//Proyectos
-Route::prefix('proyectos')->group(function(){
-    Route::get('/', [ProyectoController::class, 'index']);
-    Route::get('/{proyecto}', [ProyectoController::class, 'show']);
-    Route::post('/', [ProyectoController::class, 'store']);
-    Route::put('/{proyecto}', [ProyectoController::class, 'update']);
-    Route::delete('/{proyecto}', [ProyectoController::class, 'destroy']);
+// Proyectos
+Route::middleware('auth:api')->prefix('proyectos')->group(function(){
+    Route::get('/', [ProyectoController::class, 'index'])->middleware('rol:Super Admin,Admin,User');
+    Route::get('/{proyecto}', [ProyectoController::class, 'show'])->middleware('rol:Super Admin,Admin,User');
+    Route::post('/', [ProyectoController::class, 'store'])->middleware('rol:Super Admin');
+    Route::put('/{proyecto}', [ProyectoController::class, 'update'])->middleware('rol:Super Admin,Admin');
+    Route::delete('/{proyecto}', [ProyectoController::class, 'destroy'])->middleware('rol:Super Admin,Admin');
 });
 
-//Estudiantes
-Route::prefix('estudiantes')->group(function(){
-    Route::get('/', [EstudianteController::class, 'index']);
-    Route::get('/{estudiante}', [EstudianteController::class, 'show']);
-    Route::post('/', [EstudianteController::class, 'store']);
-    Route::put('/{estudiante}', [EstudianteController::class, 'update']);
-    Route::delete('/{estudiante}', [EstudianteController::class, 'destroy']);
+// Estudiantes
+Route::middleware('auth:api')->prefix('estudiantes')->group(function(){
+    Route::get('/', [EstudianteController::class, 'index'])->middleware('rol:Super Admin,Admin,User');
+    Route::get('/{estudiante}', [EstudianteController::class, 'show'])->middleware('rol:Super Admin,Admin,User');
+    Route::post('/', [EstudianteController::class, 'store'])->middleware('rol:Super Admin');
+    Route::put('/{estudiante}', [EstudianteController::class, 'update'])->middleware('rol:Super Admin,Admin');
+    Route::delete('/{estudiante}', [EstudianteController::class, 'destroy'])->middleware('rol:Super Admin,Admin');
 });

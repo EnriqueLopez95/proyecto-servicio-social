@@ -14,8 +14,10 @@ return new class extends Migration
     {
         Schema::create('proyectos', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre_proyecto', 50);
+            $table->string('nombre_proyecto', 200);
             $table->text('descripcion');
+
+            $table->enum('estado', ['En proceso', 'Finalizado'])->default('En proceso');
 
             $table->ForeignId('coordinador_id')
                 ->constrained('coordinadores')
