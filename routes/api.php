@@ -130,8 +130,9 @@ Route::middleware('auth:api')->prefix('proyectos')->group(function(){
     Route::get('/', [ProyectoController::class, 'index'])->middleware('rol:Super Admin,Admin,User');
     Route::get('/{proyecto}', [ProyectoController::class, 'show'])->middleware('rol:Super Admin,Admin,User');
     Route::post('/', [ProyectoController::class, 'store'])->middleware('rol:Super Admin');
-    Route::put('/{proyecto}', [ProyectoController::class, 'update'])->middleware('rol:Super Admin,Admin');
-    Route::delete('/{proyecto}', [ProyectoController::class, 'destroy'])->middleware('rol:Super Admin,Admin');
+    Route::put('/{proyecto}', [ProyectoController::class, 'update'])->middleware('rol:Super Admin');
+    Route::delete('/{proyecto}', [ProyectoController::class, 'destroy'])->middleware('rol:Super Admin');
+    Route::get('/estudiantes/search', [ProyectoController::class, 'searchEstudiantes'])->middleware('rol:Super Admin,Admin,User');
 });
 
 // Estudiantes

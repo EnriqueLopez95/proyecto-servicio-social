@@ -17,7 +17,7 @@ class EstudianteController extends Controller
     public function index()
     {
         try {
-            $estudiantes = Estudiante::with(['carrera', 'proyecto', 'usuario'])->get();
+            $estudiantes = Estudiante::with(['carrera', 'usuario'])->get();
             return ApiResponse::success('Estudiantes obtenidos', 200, ['data' => $estudiantes]);
         } catch (\Exception $e) {
             return ApiResponse::error('Error al obtener los estudiantes: ' . $e->getMessage(), 500);
@@ -51,7 +51,6 @@ class EstudianteController extends Controller
                 'telefono_estudiante.max' => 'El teléfono debe tener un máximo de 8 caracteres.',
                 'carrera_id.required' => 'La carrera es obligatoria.',
                 'carrera_id.exists' => 'La carrera no existe.',
-                'proyectos_id.exists' => 'El proyecto no existe.',
                 'user_id.required' => 'El usuario es obligatorio.',
                 'user_id.exists' => 'El usuario no existe.',
             ];
@@ -63,7 +62,6 @@ class EstudianteController extends Controller
                 'correo_estudiante' => 'required|email|max:100|unique:estudiantes,correo_estudiante',
                 'telefono_estudiante' => 'required|string|max:8',
                 'carrera_id' => 'required|exists:carreras,id',
-                'proyectos_id' => 'required|exists:proyectos,id',
                 'user_id' => 'required|exists:users,id',
             ], $messages);
 
@@ -72,7 +70,7 @@ class EstudianteController extends Controller
             }
 
             $estudiante = Estudiante::create($request->all());
-            $estudiante->load(['carrera', 'proyecto', 'usuario']);
+            $estudiante->load(['carrera', 'usuario']);
 
             DB::commit();
             return ApiResponse::success('Estudiante creado', 201, $estudiante);
@@ -88,7 +86,7 @@ class EstudianteController extends Controller
     public function show(Estudiante $estudiante)
     {
         try {
-            return ApiResponse::success('Estudiante obtenido', 200, $estudiante->load(['carrera', 'proyecto', 'usuario']));
+            return ApiResponse::success('Estudiante obtenido', 200, $estudiante->load(['carrera', 'usuario']));
         } catch (\Exception $e) {
             return ApiResponse::error('Error al obtener el estudiante: ' . $e->getMessage(), 500);
         }
@@ -121,7 +119,6 @@ class EstudianteController extends Controller
                 'telefono_estudiante.max' => 'El teléfono debe tener un máximo de 8 caracteres.',
                 'carrera_id.required' => 'La carrera es obligatoria.',
                 'carrera_id.exists' => 'La carrera no existe.',
-                'proyectos_id.exists' => 'El proyecto no existe.',
                 'user_id.required' => 'El usuario es obligatorio.',
                 'user_id.exists' => 'El usuario no existe.',
             ];
@@ -133,7 +130,6 @@ class EstudianteController extends Controller
                 'correo_estudiante' => 'sometimes|required|email|max:100|unique:estudiantes,correo_estudiante,' . $estudiante->id,
                 'telefono_estudiante' => 'sometimes|required|string|max:8',
                 'carrera_id' => 'sometimes|required|exists:carreras,id',
-                'proyectos_id' => 'required|exists:proyectos,id',
                 'user_id' => 'sometimes|required|exists:users,id',
             ], $messages);
 
@@ -142,7 +138,7 @@ class EstudianteController extends Controller
             }
 
             $estudiante->update($request->all());
-            $estudiante->load(['carrera', 'proyecto', 'usuario']);
+            $estudiante->load(['carrera', 'usuario']);
 
             DB::commit();
             return ApiResponse::success('Estudiante actualizado', 200, $estudiante);

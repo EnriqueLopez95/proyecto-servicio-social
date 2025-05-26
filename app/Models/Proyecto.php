@@ -13,6 +13,7 @@ class Proyecto extends Model
         'nombre_proyecto',
         'descripcion',
         'estado',
+        'estudiante_id',
         'coordinador_id',
         'institucion_id',
         'fecha_inicio',
@@ -27,6 +28,10 @@ class Proyecto extends Model
     }
 
     //Relación con Estudiantes
+    public function estudiante()
+    {
+        return $this->belongsTo(Estudiante::class);
+    }
     //Relación con Institución
     public function institucion()
     {

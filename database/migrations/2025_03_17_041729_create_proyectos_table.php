@@ -19,13 +19,18 @@ return new class extends Migration
 
             $table->enum('estado', ['En proceso', 'Finalizado'])->default('En proceso');
 
+            $table->foreignId('institucion_id')
+                ->constrained('instituciones')
+                ->onDelete('cascade');
+
             $table->ForeignId('coordinador_id')
                 ->constrained('coordinadores')
                 ->onDelete('cascade');
 
-            $table->foreignId('institucion_id')
-                ->constrained('instituciones')
-                ->onDelete('cascade');
+            $table->foreignId('estudiante_id')
+                ->constrained('estudiantes')
+                ->onDelete('cascade')
+                ->nullable('false');
 
             $table->date('fecha_inicio');
             $table->date('fecha_fin');
