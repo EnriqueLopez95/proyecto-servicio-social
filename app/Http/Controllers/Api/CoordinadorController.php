@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
+use App\Mail\CoordinadorWelcomeEmail;
 use App\Models\Coordinador;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+
+use Illuminate\Support\Facades\Log;
 
 class CoordinadorController extends Controller
 {
@@ -153,5 +157,37 @@ class CoordinadorController extends Controller
             return ApiResponse::error('Error al eliminar el coordinador: ' . $e->getMessage(), 500);
         }
     }
+
+    /**
+     * Enviar correo de bienvenida al coordinador.
+     */
+    public function sendEmail(Coordinador $coordinador)
+    {
+        DB::beginTransaction();
+        try {
+            if (!$coordinador->correo_coordinador) {
+                return ApiResponse::error('El coordinador no tiene un correo registrado', 400);
+            }
+
+            if (!$coordinador->usuario) {
+                return ApiResponse::error('El coordinador no tiene un usuario asociado', 400);
+            }
+
+            // Generar contraseña provisional (primeras 4 letras del nombre + 'uls')
+            $password = strtolower(substr($coordinador->nombre_coordinador, 0, 4)) . 'uls';
+
+            // Actualizar la contraseña del usuario asociado
+            $coordinador->usuario->update(['password' => bcrypt($password)]);
+
+            // Enviar el correo
+            Mail::to($coordinador->correo_coordinador)->send(new CoordinadorWelcomeEmail($coordinador, $password));
+
+            DB::commit();
+            return ApiResponse::success('Correo enviado correctamente', 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error al enviar correo a coordinador ID ' . $coordinador->id . ': ' . $e->getMessage());
+            return ApiResponse::error('Error al enviar el correo: ' . $e->getMessage(), 500);
+        }
+    }
 }
-?>

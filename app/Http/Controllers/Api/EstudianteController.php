@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Response\ApiResponse;
+use App\Mail\EstudianteWelcomeEmail;
 use App\Models\Estudiante;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+
+use Illuminate\Support\Facades\Log;
 
 class EstudianteController extends Controller
 {
@@ -161,6 +165,41 @@ class EstudianteController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return ApiResponse::error('Error al eliminar el estudiante: ' . $e->getMessage(), 500);
+        }
+    }
+
+    public function sendEmail($id)
+    {
+        $estudiante = Estudiante::find($id);
+
+        if (!$estudiante) {
+            return ApiResponse::error('Estudiante no encontrado', 404);
+        }
+
+        if (!$estudiante->correo_estudiante) {
+            return ApiResponse::error('El estudiante no tiene un correo registrado', 400);
+        }
+
+        if (!$estudiante->usuario) {
+            return ApiResponse::error('El estudiante no tiene un usuario asociado', 400);
+        }
+
+        DB::beginTransaction();
+        try {
+            $password = $estudiante->carnet . 'uls';
+
+            // Actualizar la contraseña del usuario asociado
+            $estudiante->usuario->update(['password' => bcrypt($password)]);
+
+            // Enviar el correo
+            Mail::to($estudiante->correo_estudiante)->send(new EstudianteWelcomeEmail($estudiante, $password));
+
+            DB::commit();
+            return ApiResponse::success('Correo enviado correctamente', 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error al enviar correo a estudiante ID ' . $id . ': ' . $e->getMessage());
+            return ApiResponse::error('Error al enviar el correo: ' . $e->getMessage(), 500);
         }
     }
 }

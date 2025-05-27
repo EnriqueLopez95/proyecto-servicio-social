@@ -123,6 +123,7 @@ Route::middleware('auth:api')->prefix('coordinadores')->group(function () {
     Route::post('/', [CoordinadorController::class, 'store'])->middleware('rol:Super Admin');
     Route::put('/{coordinador}', [CoordinadorController::class, 'update'])->middleware('rol:Super Admin');
     Route::delete('/{coordinador}', [CoordinadorController::class, 'destroy'])->middleware('rol:Super Admin');
+    Route::get('/{coordinador}/send-email', [CoordinadorController::class, 'sendEmail'])->middleware('rol:Super Admin');
 });
 
 // Proyectos
@@ -142,4 +143,5 @@ Route::middleware('auth:api')->prefix('estudiantes')->group(function(){
     Route::post('/', [EstudianteController::class, 'store'])->middleware('rol:Super Admin');
     Route::put('/{estudiante}', [EstudianteController::class, 'update'])->middleware('rol:Super Admin,Admin');
     Route::delete('/{estudiante}', [EstudianteController::class, 'destroy'])->middleware('rol:Super Admin,Admin');
+    Route::get('{id}/send-email', [EstudianteController::class, 'sendEmail'])->middleware('rol:Super Admin');
 });
