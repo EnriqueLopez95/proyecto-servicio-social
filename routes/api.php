@@ -102,7 +102,7 @@ Route::middleware('auth:api')->prefix('carreras')->group(function(){
 Route::middleware('auth:api')->prefix('direcciones')->group(function(){
     Route::get('/', [DireccionController::class, 'index'])->middleware('rol:Super Admin,Admin,User');
     Route::get('/{direccion}', [DireccionController::class, 'show'])->middleware('rol:Super Admin,Admin,User');
-    Route::post('/', [DireccionController::class, 'store'])->middleware('rol:Super Admin');
+    Route::post('/', [DireccionController::class, 'store'])->middleware('rol:Super Admin,Admin');
     Route::put('/{direccion}', [DireccionController::class, 'update'])->middleware('rol:Super Admin,Admin');
     Route::delete('/{direccion}', [DireccionController::class, 'destroy'])->middleware('rol:Super Admin,Admin');
 });
@@ -111,7 +111,7 @@ Route::middleware('auth:api')->prefix('direcciones')->group(function(){
 Route::middleware('auth:api')->prefix('instituciones')->group(function(){
     Route::get('/', [InstitucionController::class, 'index'])->middleware('rol:Super Admin,Admin,User');
     Route::get('/{institucion}', [InstitucionController::class, 'show'])->middleware('rol:Super Admin,Admin,User');
-    Route::post('/', [InstitucionController::class, 'store'])->middleware('rol:Super Admin');
+    Route::post('/', [InstitucionController::class, 'store'])->middleware('rol:Super Admin,Admin');
     Route::put('/{institucion}', [InstitucionController::class, 'update'])->middleware('rol:Super Admin,Admin');
     Route::delete('/{institucion}', [InstitucionController::class, 'destroy'])->middleware('rol:Super Admin,Admin');
 });
@@ -120,10 +120,10 @@ Route::middleware('auth:api')->prefix('instituciones')->group(function(){
 Route::middleware('auth:api')->prefix('coordinadores')->group(function () {
     Route::get('/', [CoordinadorController::class, 'index'])->middleware('rol:Super Admin,Admin,User');
     Route::get('/{coordinador}', [CoordinadorController::class, 'show'])->middleware('rol:Super Admin,Admin,User');
-    Route::post('/', [CoordinadorController::class, 'store'])->middleware('rol:Super Admin');
-    Route::put('/{coordinador}', [CoordinadorController::class, 'update'])->middleware('rol:Super Admin');
-    Route::delete('/{coordinador}', [CoordinadorController::class, 'destroy'])->middleware('rol:Super Admin');
-    Route::get('/{coordinador}/send-email', [CoordinadorController::class, 'sendEmail'])->middleware('rol:Super Admin');
+    Route::post('/', [CoordinadorController::class, 'store'])->middleware('rol:Super Admin,Admin');
+    Route::put('/{coordinador}', [CoordinadorController::class, 'update'])->middleware('rol:Super Admin,Admin');
+    Route::delete('/{coordinador}', [CoordinadorController::class, 'destroy'])->middleware('rol:Super Admin,Admin');
+    Route::get('/{coordinador}/send-email', [CoordinadorController::class, 'sendEmail'])->middleware('rol:Super Admin,Admin');
 });
 
 // Proyectos
