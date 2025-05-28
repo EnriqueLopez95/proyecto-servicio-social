@@ -29,8 +29,7 @@ return new class extends Migration
 
             $table->foreignId('estudiante_id')
                 ->constrained('estudiantes')
-                ->onDelete('cascade')
-                ->nullable('false');
+                ->onDelete('cascade');
 
             $table->date('fecha_inicio');
             $table->date('fecha_fin');

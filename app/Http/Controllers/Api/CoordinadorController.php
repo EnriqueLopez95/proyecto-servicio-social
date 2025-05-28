@@ -173,8 +173,8 @@ class CoordinadorController extends Controller
                 return ApiResponse::error('El coordinador no tiene un usuario asociado', 400);
             }
 
-            // Generar contraseña provisional (primeras 4 letras del nombre + 'uls')
-            $password = strtolower(substr($coordinador->nombre_coordinador, 0, 4)) . 'uls';
+            // Generar contraseña provisional (primeras 5 letras del nombre + 'uls')
+            $password = strtolower(substr($coordinador->nombre_coordinador, 0, 4)) . 'uls2025';
 
             // Actualizar la contraseña del usuario asociado
             $coordinador->usuario->update(['password' => bcrypt($password)]);

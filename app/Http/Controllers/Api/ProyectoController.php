@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Proyecto;
 use App\Models\Estudiante;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProyectoController extends Controller
 {
@@ -69,5 +70,28 @@ class ProyectoController extends Controller
             ->select('id', 'nombre_estudiante', 'apellido_estudiante')
             ->get();
         return response()->json($estudiantes, 200);
+    }
+
+    public function userProjects()
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['message' => 'Usuario no autenticado'], 401);
+        }
+
+        $estudiante = $user->estudiante;
+        if (!$estudiante) {
+            return response()->json(['message' => 'El usuario no está asociado a ningún estudiante', 'data' => []], 200);
+        }
+
+        $proyectos = Proyecto::where('estudiante_id', $estudiante->id)
+            ->with(['institucion', 'coordinador', 'estudiante'])
+            ->get();
+
+        if ($proyectos->isEmpty()) {
+            return response()->json(['message' => 'El estudiante no está asociado a ningún proyecto', 'data' => []], 200);
+        }
+
+        return response()->json(['message' => 'Proyectos obtenidos', 'data' => $proyectos], 200);
     }
 }
