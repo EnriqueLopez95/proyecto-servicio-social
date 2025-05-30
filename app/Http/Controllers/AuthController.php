@@ -17,6 +17,7 @@ use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
+
 class AuthController extends Controller
 {
     //
@@ -60,7 +61,6 @@ class AuthController extends Controller
 
             try {
                 $user = JWTAuth::toUser($currentToken);
-
             } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
                 try {
                     // Intentar refrescar el token
@@ -88,7 +88,6 @@ class AuthController extends Controller
                 'token' => $newToken,
                 'message' => 'Token actualizado',
             ], 200);
-
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -165,12 +164,46 @@ class AuthController extends Controller
                 'message' => 'User logged out successfully',
                 'status' => 200
             ], 200);
-
         } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
             return response()->json([
                 'message' => 'Error invalidating token: ' . $e->getMessage(),
                 'status' => 500
             ], 500);
+        }
+    }
+
+    public function updatePassword(Request $request)
+    {
+        try {
+            // Validar los datos
+            $validator = Validator::make($request->all(), [
+                'password' => 'required|string|min:8',
+                'password_confirmation' => 'required|string|min:8|same:password',
+            ], [
+                'password.required' => 'La nueva contraseña es obligatoria.',
+                'password.min' => 'La nueva contraseña debe tener al menos 8 caracteres.',
+                'password_confirmation.required' => 'La confirmación de la contraseña es obligatoria.',
+                'password_confirmation.same' => 'Las contraseñas no coinciden.',
+            ]);
+
+            if ($validator->fails()) {
+                return ApiResponse::error($validator->errors()->first(), 400);
+            }
+
+            // Obtener el usuario autenticado
+            $user = Auth::user();
+            if (!$user) {
+                return ApiResponse::error('Usuario no autenticado', 401);
+            }
+
+            // Actualizar la contraseña
+            $user->update([
+                'password' => Hash::make($request->password),
+            ]);
+
+            return ApiResponse::success('Contraseña actualizada exitosamente', 200);
+        } catch (\Exception $e) {
+            return ApiResponse::error('Error al actualizar la contraseña: ' . $e->getMessage(), 500);
         }
     }
 }

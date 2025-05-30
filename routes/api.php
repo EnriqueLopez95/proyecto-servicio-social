@@ -39,6 +39,8 @@ Route::middleware('auth:api')->prefix('users')->group(function (){
     Route::get('/{id}',[CreatePermissionRolController::class,'ShowUser'])->middleware('rol:Super Admin,Admin,User');
     Route::post('/create-user',[CreatePermissionRolController::class,'createUser'])->middleware('rol:Super Admin');
     Route::put('/update-user/{user}',[CreatePermissionRolController::class,'updateUser'])->middleware('rol:Super Admin');
+
+    Route::put('update-password', [AuthController::class, 'updatePassword']);
 });
 
 
